@@ -7,6 +7,8 @@
 
 #include "../include/gtp.h"
 
+// TO-DO: ADD MUCH MORE ERROR CHECKING
+
 // Build a list of rules
 // Each rule has a list of expansions
 // Each expansion has its own rule and a first set
@@ -22,6 +24,22 @@ class Rule {
         std::string name;
         std::vector<Expansion> expansions;
 };
+
+std::string generateNestedIf(Rule r) {
+    std::string output = "";
+
+    if (r.expansions.size() == 1) {
+        output += "if (tk.ID == " + r.expansions[0].first[0];
+        for (unsigned int i = 1; i < r.expansions[0].first.size(); i++) {
+            output += " || tk.ID == " + r.expansions[0].first[i];
+        }
+
+        output += ")";
+    }
+
+
+    return output;
+}
 
 std::string GTP::buildParser() {
     // Output string
@@ -71,6 +89,8 @@ std::string GTP::buildParser() {
         bool ruleDone = false;
         Expansion tempExpansion;
         for (unsigned int i = 2; i < words.size(); i++) {
+            // Based on the booleans, determine what to do with
+            // the current word within the rule
             if (words[i] == "-") {
                 firstDone = true;
             } else if (!firstDone) {
@@ -83,6 +103,7 @@ std::string GTP::buildParser() {
                 ruleDone = true;
             }
 
+            // If we have finished a rule and the first sets, we have a new expansion
             if (firstDone && ruleDone) {
                 tempRule.expansions.push_back(tempExpansion);
                 tempExpansion.rule = "";
@@ -107,5 +128,11 @@ std::string GTP::buildParser() {
         std::cout << std::endl;
     }
 
-    return "";
+    // Data is now parsed
+    
+    for (Rule r : rules) {
+        
+    }
+
+    return generateNestedIf(rules[0]);
 }

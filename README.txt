@@ -8,9 +8,9 @@ Assumptions:
 
 Format:
     follow whitespace EXACTLY
-    (words which begin with uppercase are terminals)
-    Show the grammar rule, but list the first sets for each rule
-    Nonterminal -> (terminal terminal) Nonterminal terminal | (terminal) terminal
+    (words which begin with uppercase are terminals - use the empty keyword for epsilon)
+    Show the grammar rule, but list the first sets for each rule in the beginning
+    Nonterminal -> terminal terminal - Nonterminal terminal | terminal - terminal
 
 Compilation:
     To compile, use the 'make' command along with the provided Makefile in the project directory

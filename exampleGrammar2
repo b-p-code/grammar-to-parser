@@ -1,0 +1,3 @@
+S -> thisTK thatTK - R | hiTK - Q
+R -> thisTK - thisTK | thatTK - thatTk
+Q -> hiTK - hiTK R | hiTK - hiTK

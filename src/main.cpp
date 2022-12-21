@@ -49,7 +49,7 @@ int main(int args, char** argv) {
     
     // SEND NEW STRING FOR PARSER INTO OUTPUT STRING
     GTP gtp(inputTotal);
-    gtp.buildParser();
+    output = gtp.buildParser();
 
     // Output to files
     if (createFile(outputFileName)) {
