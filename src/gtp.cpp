@@ -45,17 +45,20 @@ bool containsEmpty(std::vector<std::string> words) {
 
 std::string generateNestedIfAux(std::vector<std::string> rules) {
     std::string output = "";
+    std::vector<std::string> ruleVec = rules;
     if (rules.empty()) {
         return "";
     } else {
+        ruleVec.erase(ruleVec.begin());
         if (iscapital(rules[0][0])) {
             output += rules[0] + "();\n";
+            output += generateNestedIfAux(ruleVec);
         } else if (rules[0] == "empty") { 
-            output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
+            output += generateNestedIfAux(ruleVec);
         } else {
             output += "if (tk.ID == " + rules[0] + ") {\ntk = scanner();\n";
-            output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
-            output += "}\n";
+            output += generateNestedIfAux(ruleVec);
+            output += "} else { error(); }\n";
         }
     }
 
