@@ -16,7 +16,7 @@
 class Expansion {
     public:
         std::vector<std::string> first;
-        std::string rule;
+        std::vector<std::string> terms;
 };
 
 class Rule {
@@ -33,8 +33,11 @@ std::string generateNestedIf(Rule r) {
         for (unsigned int i = 1; i < r.expansions[0].first.size(); i++) {
             output += " || tk.ID == " + r.expansions[0].first[i];
         }
+        output += ") { ";
 
-        output += ")";
+        output += "}";
+    } else {
+        
     }
 
 
@@ -96,17 +99,18 @@ std::string GTP::buildParser() {
             } else if (!firstDone) {
                 tempExpansion.first.push_back(words[i]);
             } else if (words[i] == "|") {
-                tempExpansion.rule = words[i - 1];
                 ruleDone = true;
             } else if (i == words.size() - 1) {
-                tempExpansion.rule = words[i];
+                tempExpansion.terms.push_back(words[i]);
                 ruleDone = true;
+            } else {
+                tempExpansion.terms.push_back(words[i]);
             }
 
             // If we have finished a rule and the first sets, we have a new expansion
             if (firstDone && ruleDone) {
                 tempRule.expansions.push_back(tempExpansion);
-                tempExpansion.rule = "";
+                tempExpansion.terms.clear();
                 tempExpansion.first.clear();
                 firstDone = false;
                 ruleDone = false;
@@ -123,7 +127,11 @@ std::string GTP::buildParser() {
             for (std::string s : ex.first) {
                 std::cout << s << " ";
             }
-            std::cout << "Rule: " << ex.rule << " ";
+            std::cout << "Rule: ";
+            for (std::string s : ex.terms) {
+                std::cout << s << " ";
+            }
+            std::cout << " ";
         }
         std::cout << std::endl;
     }
