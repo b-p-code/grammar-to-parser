@@ -1,0 +1,2 @@
+B -> a - A
+A -> a - a | empty - empty

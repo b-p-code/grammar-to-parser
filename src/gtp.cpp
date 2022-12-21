@@ -25,21 +25,99 @@ class Rule {
         std::vector<Expansion> expansions;
 };
 
+bool iscapital(char x)
+{
+    if (x >='A' && x <= 'Z') {
+        return true;
+    } else { 
+        return false;
+    }
+}
+
+bool containsEmpty(std::vector<std::string> words) {
+    for (std::string w : words) {
+        if (w == "empty") {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string generateNestedIfAux(std::vector<std::string> rules) {
+    std::string output = "";
+    if (rules.empty()) {
+        return "";
+    } else {
+        if (iscapital(rules[0][0])) {
+            output += rules[0] + "();";
+        } else if (rules[0] == "empty") { 
+            output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
+        } else {
+            output += "tk = scanner();\n";
+            output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
+        }
+    }
+
+    return output;
+}
+
 std::string generateNestedIf(Rule r) {
     std::string output = "";
 
+    bool hasEmpty = false;
+
+    for (Expansion ex : r.expansions) {
+        if (containsEmpty(ex.first)) {
+            hasEmpty = true;
+        }
+    }
+
+    std::cout << hasEmpty << std::endl;
     if (r.expansions.size() == 1) {
-        output += "if (tk.ID == " + r.expansions[0].first[0];
+        if (r.expansions[0].first[0] != "empty") {
+            output += "if (tk.ID == " + r.expansions[0].first[0];
+        }
+
+        output += ") {\n";
+        output += generateNestedIfAux(r.expansions[0].terms);
+        output += " }";
+
+        if (hasEmpty) {
+            output += " else { return; }\n";
+        } else {
+            output += " else { error(); }\n";
+        }
+    } else {
+        if (r.expansions[0].first[0] != "empty") {
+            output += "if (tk.ID == " + r.expansions[0].first[0];
+        }
         for (unsigned int i = 1; i < r.expansions[0].first.size(); i++) {
             output += " || tk.ID == " + r.expansions[0].first[i];
         }
-        output += ") { ";
-
+        output += ") {\n";
+        output += generateNestedIfAux(r.expansions[0].terms);
         output += "}";
-    } else {
-        
-    }
 
+        for (unsigned int i = 1; i < r.expansions.size(); i++) {
+            if (r.expansions[i].first[0] != "empty") {
+                output += " else if (tk.ID == " + r.expansions[i].first[0];
+            }
+            for (unsigned int j = 1; j < r.expansions[i].first.size(); j++) {
+                if (r.expansions[i].first[j] != "empty") {
+                    output += " || tk.ID == " + r.expansions[i].first[j];
+                }
+            }
+            output += ") {\n";
+            output += generateNestedIfAux(r.expansions[i].terms);
+            output += "} ";
+        }
+
+        if (hasEmpty) {
+            output += " else { return; }\n";
+        } else {
+            output += " else { error(); }\n";
+        }
+    }
 
     return output;
 }
@@ -139,8 +217,10 @@ std::string GTP::buildParser() {
     // Data is now parsed
     
     for (Rule r : rules) {
-        
+        output += "void " + r.name + "() { \n";
+        output += generateNestedIf(r);
+        output += "}";
     }
 
-    return generateNestedIf(rules[0]);
+    return output;
 }

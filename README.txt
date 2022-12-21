@@ -8,6 +8,7 @@ Assumptions:
 
 Format:
     follow whitespace EXACTLY
+    make sure any empty productions appear at the end of the rule
     (words which begin with uppercase are terminals - use the empty keyword for epsilon)
     Show the grammar rule, but list the first sets for each rule in the beginning
     Nonterminal -> terminal terminal - Nonterminal terminal | terminal - terminal
