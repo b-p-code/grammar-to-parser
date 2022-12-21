@@ -1,0 +1,5 @@
+A -> a b c - B C | d e - D E | empty - empty
+B -> a - a | b - b | c - C
+C -> f - f
+D -> d - d | e - e
+E -> g - g

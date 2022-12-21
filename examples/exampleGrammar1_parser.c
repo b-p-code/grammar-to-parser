@@ -1,18 +1,24 @@
+
 void A() { 
 if (tk.ID == a || tk.ID == b) {
 tk = scanner();
-B();} else if (tk.ID == c) {
-C();}  else { error(); }
-}void B() { 
+B();
+} else if (tk.ID == c) {
+C();
+}  else { error(); }
+}
+void B() { 
 if (tk.ID == a) {
 tk = scanner();
 } else if (tk.ID == b) {
 tk = scanner();
 }  else { error(); }
-}void C() { 
+}
+void C() { 
 if (tk.ID == c) {
 tk = scanner();
-B();} else if (tk.ID == c) {
+B();
+} else if (tk.ID == c) {
 tk = scanner();
 }  else { error(); }
 }

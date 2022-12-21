@@ -49,12 +49,13 @@ std::string generateNestedIfAux(std::vector<std::string> rules) {
         return "";
     } else {
         if (iscapital(rules[0][0])) {
-            output += rules[0] + "();";
+            output += rules[0] + "();\n";
         } else if (rules[0] == "empty") { 
             output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
         } else {
-            output += "tk = scanner();\n";
+            output += "if (tk.ID == " + rules[0] + ") {\ntk = scanner();\n";
             output += generateNestedIfAux(std::vector<std::string>(rules.begin() + 1, rules.end()));
+            output += "}\n";
         }
     }
 
@@ -71,16 +72,15 @@ std::string generateNestedIf(Rule r) {
             hasEmpty = true;
         }
     }
-
-    std::cout << hasEmpty << std::endl;
     if (r.expansions.size() == 1) {
+        std::cout << r.expansions[0].first.size() << std::endl;
         if (r.expansions[0].first[0] != "empty") {
             output += "if (tk.ID == " + r.expansions[0].first[0];
         }
 
         output += ") {\n";
         output += generateNestedIfAux(r.expansions[0].terms);
-        output += " }";
+        output += "}";
 
         if (hasEmpty) {
             output += " else { return; }\n";
@@ -107,9 +107,13 @@ std::string generateNestedIf(Rule r) {
                     output += " || tk.ID == " + r.expansions[i].first[j];
                 }
             }
-            output += ") {\n";
-            output += generateNestedIfAux(r.expansions[i].terms);
-            output += "} ";
+
+
+            if (generateNestedIfAux(r.expansions[i].terms) != "") {
+                output += ") {\n";
+                output += generateNestedIfAux(r.expansions[i].terms);
+                output += "} ";
+            }
         }
 
         if (hasEmpty) {
@@ -217,7 +221,7 @@ std::string GTP::buildParser() {
     // Data is now parsed
     
     for (Rule r : rules) {
-        output += "void " + r.name + "() { \n";
+        output += "\nvoid " + r.name + "() { \n";
         output += generateNestedIf(r);
         output += "}";
     }

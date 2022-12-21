@@ -1,0 +1,22 @@
+Program -> idTK - Statements
+Statements -> idTK - Statement scTK Mstatements
+Mstatements -> idTK - Statement scTK Mstatements | empty - empty
+Statement -> idTK - Def
+Def -> idTK - Deff
+Deff -> exprTK - Expr | isTK - Globalassign
+Globalassign -> isTk - isTK Expr
+Var -> typeTk - typeTK idTK Varr
+Varr -> isTk - isTK Expr
+Expr -> exprTK - exprTK
+Func -> takesTk returnsTk doesTK - Takes Return doesTK Block
+Return -> returnsTK - returnsTK typeTK commaTK | empty - empty
+Takes -> takesTK - takesTK Param Params | empty - empty
+Param -> typeTK - typeTK idTK commaTK | refTK - refTK typeTK idTK
+Params -> typeTK refTK - Param Params | empty - empty
+Block -> l_braceTK - l_braceTK Internalstats r_braceTK
+Internalstats -> idTK - Internalstat scTK Minternalstats
+Minternalstats -> idTK - Internalstat scTK Minternalstats | empty - empty
+Internalstat -> idTK - idTK Id
+ID -> isTK - isTK Expr | l_parenTK - l_parenTK Actualparams r_parenTK
+Actualparems -> idTK - idTK Actualparamss | empty - empty
+Actualparamss -> commaTk - commaTK idTK Actualparamss | empty - empty
